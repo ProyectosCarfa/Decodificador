@@ -202,3 +202,71 @@ function copiarResultado() {
         setTimeout(() => (btn.innerHTML = original), 1500);
     });
 }
+
+
+/* ==================== RESIZER DEL RESULTADO ==================== */
+(function initResizer() {
+  const codeSnap = document.getElementById('codeSnap');
+  const resizer = document.getElementById('resizer');
+  if (!codeSnap || !resizer) return;
+
+  const MIN_HEIGHT = 120;   // altura mínima
+  const MAX_HEIGHT = 700;   // altura máxima
+
+  let startY = 0;
+  let startHeight = 0;
+  let arrastrando = false;
+
+  // Cargar altura guardada
+  const guardada = localStorage.getItem('carfa-result-height');
+  if (guardada) {
+    const h = parseInt(guardada, 10);
+    if (h >= MIN_HEIGHT && h <= MAX_HEIGHT) {
+      codeSnap.style.height = h + 'px';
+    }
+  }
+
+  function iniciar(e) {
+    arrastrando = true;
+    startY = (e.touches ? e.touches[0].clientY : e.clientY);
+    startHeight = codeSnap.offsetHeight;
+    codeSnap.classList.add('resizing');
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'ns-resize';
+    e.preventDefault();
+  }
+
+  function mover(e) {
+    if (!arrastrando) return;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY);
+    const delta = y - startY;
+    let nuevaAltura = startHeight + delta;
+
+    // Limitar
+    if (nuevaAltura < MIN_HEIGHT) nuevaAltura = MIN_HEIGHT;
+    if (nuevaAltura > MAX_HEIGHT) nuevaAltura = MAX_HEIGHT;
+
+    codeSnap.style.height = nuevaAltura + 'px';
+  }
+
+  function terminar() {
+    if (!arrastrando) return;
+    arrastrando = false;
+    codeSnap.classList.remove('resizing');
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+
+    // Guardar preferencia
+    localStorage.setItem('carfa-result-height', codeSnap.offsetHeight);
+  }
+
+  // Eventos del mouse
+  resizer.addEventListener('mousedown', iniciar);
+  document.addEventListener('mousemove', mover);
+  document.addEventListener('mouseup', terminar);
+
+  // Eventos táctiles (móvil)
+  resizer.addEventListener('touchstart', iniciar, { passive: false });
+  document.addEventListener('touchmove', mover, { passive: false });
+  document.addEventListener('touchend', terminar);
+})();
