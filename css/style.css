@@ -1209,3 +1209,101 @@
           padding: 3px 8px;
         }
       }
+/* ==================== RESIZER DEL RESULTADO ==================== */
+
+/* El contenedor principal permite altura dinámica */
+.code-snap {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El contenido crece/encoge según el contenedor */
+.code-snap .result-content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 60px;
+  max-height: none;
+}
+
+/* Scrollbar bonito dentro del resultado */
+.code-snap .result-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.code-snap .result-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-snap .result-content::-webkit-scrollbar-thumb {
+  background: rgba(45, 255, 122, 0.35);
+  border-radius: 6px;
+}
+
+.code-snap .result-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 255, 122, 0.7);
+}
+
+/* Barra inferior de redimensión */
+.resizer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 14px;
+  cursor: ns-resize;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.03));
+  border-top: 1px solid #1f2937;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.resizer:hover {
+  background: linear-gradient(to bottom, transparent, rgba(45, 255, 122, 0.15));
+}
+
+/* Los 3 puntitos decorativos */
+.resizer span {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(45, 255, 122, 0.4);
+  transition: background 0.15s;
+}
+
+.resizer:hover span {
+  background: rgba(45, 255, 122, 0.9);
+}
+
+/* Estado mientras se arrastra */
+.code-snap.resizing {
+  border-left-color: #00d9ff;
+  box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.15);
+}
+
+.code-snap.resizing .resizer {
+  background: linear-gradient(to bottom, transparent, rgba(0, 217, 255, 0.25));
+}
+
+.code-snap.resizing .resizer span {
+  background: #00d9ff;
+}
+
+/* En tema claro, ajustamos para que no desentone */
+html[data-theme="light"] .resizer {
+  border-top: 1px solid #d0d7de;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.02));
+}
+
+html[data-theme="light"] .resizer:hover {
+  background: linear-gradient(to bottom, transparent, rgba(26, 127, 55, 0.1));
+}
+
+html[data-theme="light"] .resizer span {
+  background: rgba(26, 127, 55, 0.35);
+}
+
+html[data-theme="light"] .resizer:hover span {
+  background: rgba(26, 127, 55, 0.9);
+}
